@@ -1,0 +1,188 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Course {
+    private String courseCode, title, description, schedule;
+    private int capacity, registeredStudents;
+
+    public Course(String courseCode, String title, String description, int capacity, String schedule) {
+        this.courseCode = courseCode;
+        this.title = title;
+        this.description = description;
+        this.capacity = capacity;
+        this.registeredStudents = 0;
+        this.schedule = schedule;
+    }
+
+    public String getCourseCode() { return courseCode; }
+    public String getTitle() { return title; }
+    public String getDescription() { return description; }
+    public int getAvailableSlots() { return capacity - registeredStudents; }
+    public String getSchedule() { return schedule; }
+    public void registerStudent() { if (registeredStudents < capacity) registeredStudents++; }
+    public void deregisterStudent() { if (registeredStudents > 0) registeredStudents--; }
+}
+
+class Student {
+    private String studentID, name;
+    private List<Course> registeredCourses;
+
+    public Student(String studentID, String name) {
+        this.studentID = studentID;
+        this.name = name;
+        this.registeredCourses = new ArrayList<>();
+    }
+
+    public String getStudentID() { return studentID; }
+    public String getName() { return name; }
+    public List<Course> getRegisteredCourses() { return registeredCourses; }
+
+    public void registerCourse(Course course) {
+        if (course.getAvailableSlots() > 0 && !registeredCourses.contains(course)) {
+            registeredCourses.add(course);
+            course.registerStudent();
+            System.out.println("Course registered successfully!");
+        } else {
+            System.out.println("Unable to register for the course.");
+        }
+    }
+
+    public void dropCourse(Course course) {
+        if (registeredCourses.remove(course)) {
+            course.deregisterStudent();
+            System.out.println("Course dropped successfully!");
+        } else {
+            System.out.println("Course not found in registered courses.");
+        }
+    }
+}
+
+public class CourseRegistrationSystem {
+    private List<Course> courses;
+    private List<Student> students;
+
+    public CourseRegistrationSystem() {
+        courses = new ArrayList<>();
+        students = new ArrayList<>();
+    }
+
+    public void addCourse(Course course) { courses.add(course); }
+    public void addStudent(Student student) { students.add(student); }
+    public void displayCourses() {
+        System.out.println("Available Courses:");
+        for (Course course : courses) {
+            System.out.println(course.getCourseCode() + ": " + course.getTitle() + " - " + course.getDescription() +
+                    " | Schedule: " + course.getSchedule() + " | Available Slots: " + course.getAvailableSlots());
+        }
+    }
+
+    public Student findStudentByID(String studentID) {
+        for (Student student : students) {
+            if (student.getStudentID().equals(studentID)) {
+                return student;
+            }
+        }
+        return null;
+    }
+
+    public Course findCourseByCode(String courseCode) {
+        for (Course course : courses) {
+            if (course.getCourseCode().equals(courseCode)) {
+                return course;
+            }
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        CourseRegistrationSystem system = new CourseRegistrationSystem();
+        system.addCourse(new Course("CSE101", "Intro to Computer Science", "Basic concepts of computer science.", 60, "MWF 10:00-11:00"));
+        system.addCourse(new Course("MA 101", "Calculus I", "Introduction to calculus.", 40, "TTh 09:00-10:30"));
+        system.addStudent(new Student("S001", "Riya"));
+        system.addStudent(new Student("S002", "Sravya"));
+
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        while (true) {
+            System.out.println("1. Display Courses");
+            System.out.println("2. Register for Course");
+            System.out.println("3. Drop Course");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1: system.displayCourses(); break;
+                case 2:
+                    System.out.print("Enter Student ID: ");
+                    Student student = system.findStudentByID(scanner.nextLine());
+                    if (student != null) {
+                        System.out.print("Enter Course Code: ");
+                        Course course = system.findCourseByCode(scanner.nextLine());
+                        if (course != null) student.registerCourse(course);
+                        else System.out.println("Course not found.");
+                    } else System.out.println("Student not found.");
+                    break;
+                case 3:
+                    System.out.print("Enter Student ID: ");
+                    student = system.findStudentByID(scanner.nextLine());
+                    if (student != null) {
+                        System.out.print("Enter Course Code: ");
+                        Course course = system.findCourseByCode(scanner.nextLine());
+                        if (course != null) student.dropCourse(course);
+                        else System.out.println("Course not found.");
+                    } else System.out.println("Student not found.");
+                    break;
+                case 4: System.out.println("ThankYou"); System.exit(0); break;
+                default: System.out.println("Invalid choice. Please try again."); break;
+            }
+        }
+    }
+}
+O/P:
+
+1. Display Courses
+2. Register for Course
+3. Drop Course
+4. Exit
+Enter your choice: 1
+Available Courses:
+CSE101: Intro to Computer Science - Basic concepts of computer science. | Schedule: MWF 10:00-11:00 | Available Slots: 50
+MAT101: Calculus I - Introduction to calculus. | Schedule: TTh 09:00-10:30 | Available Slots: 40
+
+1. Display Courses
+2. Register for Course
+3. Drop Course
+4. Exit
+Enter your choice: 2
+Enter Student ID: S001
+Enter Course Code: CSE101
+Course registered successfully!
+
+1. Display Courses
+2. Register for Course
+3. Drop Course
+4. Exit
+Enter your choice: 1
+Available Courses:
+CSE101: Intro to Computer Science - Basic concepts of computer science. | Schedule: MWF 10:00-11:00 | Available Slots: 49
+MAT101: Calculus I - Introduction to calculus. | Schedule: TTh 09:00-10:30 | Available Slots: 40
+
+1. Display Courses
+2. Register for Course
+3. Drop Course
+4. Exit
+Enter your choice: 3
+Enter Student ID: S001
+Enter Course Code: CSE101
+Course dropped successfully!
+
+1. Display Courses
+2. Register for Course
+3. Drop Course
+4. Exit
+Enter your choice: 4
+Thank you for using the Course Registration System. Goodbye!
