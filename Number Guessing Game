@@ -1,0 +1,66 @@
+import java.util.Random;
+import java.util.Scanner;
+
+public class NumberGuessingGame {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+        int rangeStart = 1;
+        int rangeEnd = 100;
+        int maxAttempts = 10;
+        int score = 0;
+        boolean playAgain = true;
+
+        while (playAgain) {
+            int numberToGuess = random.nextInt(rangeEnd - rangeStart + 1) + rangeStart;
+            int attempts = 0;
+            boolean guessedCorrectly = false;
+
+            System.out.println("I have generated a random number between " + rangeStart + " and " + rangeEnd + ".");
+            System.out.println("You have " + maxAttempts + " attempts to guess the number.");
+
+            while (attempts < maxAttempts && !guessedCorrectly) {
+                System.out.print("Enter your guess: ");
+                int guess = scanner.nextInt();
+                attempts++;
+
+                if (guess < numberToGuess) {
+                    System.out.println("Too low! Try again.");
+                } else if (guess > numberToGuess) {
+                    System.out.println("Too high! Try again.");
+                } else {
+                    System.out.println("Correct! You've guessed the number.");
+                    guessedCorrectly = true;
+                    score++;
+                }
+            }
+
+            if (!guessedCorrectly) {
+                System.out.println("Sorry, you've used all your attempts. The correct number was " + numberToGuess + ".");
+            }
+
+            System.out.println("Your current score: " + score);
+            System.out.print("Do you want to play again? (yes/no): ");
+            playAgain = scanner.next().equalsIgnoreCase("yes");
+        }
+
+        System.out.println("Intersting you have played well! Your final score: " + score);
+        scanner.close();
+    }
+}
+O/P:
+I have generated a random number between 1 and 100.
+You have 10 attempts to guess the number.
+Enter your guess: 50
+Too low! Try again.
+Enter your guess: 75
+Too high! Try again.
+Enter your guess: 60
+Too low! Try again.
+Enter your guess: 70
+Too high! Try again.
+Enter your guess: 65
+Correct! You've guessed the number.
+Your current score: 1
+Do you want to play again? (yes/no): no
+Intersting you have played well! Your final score:1
