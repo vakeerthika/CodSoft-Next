@@ -1,0 +1,141 @@
+import java.util.Scanner;
+
+class BankAccount {
+    private double balance;
+
+    public BankAccount(double initialBalance) {
+        this.balance = initialBalance;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void withdraw(double amount) {
+        if (amount > 0 && balance >= amount) {
+            balance -= amount;
+        } else {
+            System.out.println("Insufficient Balance.");
+        }
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+        }
+    }
+}
+
+class ATM {
+    private BankAccount account;
+
+    public ATM(BankAccount account) {
+        this.account = account;
+    }
+
+    public void withdraw(double amount) {
+        account.withdraw(amount);
+    }
+
+    public void deposit(double amount) {
+        account.deposit(amount);
+    }
+
+    public void checkBalance() {
+        System.out.println("Current balance: " + account.getBalance());
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount(100000);
+        ATM atm = new ATM(account);
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+        double amount;
+
+        while (true) {
+            System.out.println("Welcome to the ATM!");
+            System.out.println("1. Withdraw");
+            System.out.println("2. Deposit");
+            System.out.println("3. Check Balance");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter amount to withdraw: ");
+                    amount = scanner.nextDouble();
+                    atm.withdraw(amount);
+                    break;
+                case 2:
+                    System.out.print("Enter amount to deposit: ");
+                    amount = scanner.nextDouble();
+                    atm.deposit(amount);
+                    break;
+                case 3:
+                    atm.checkBalance();
+                    break;
+                case 4:
+                    System.out.println("Thank you");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+        }
+    }
+}
+O/P:
+Welcome to the ATM!
+1. Withdraw
+2. Deposit
+3. Check Balance
+4. Exit
+Enter your choice: 3
+Current balance: 100000.0
+
+Welcome to the ATM!
+1. Withdraw
+2. Deposit
+3. Check Balance
+4. Exit
+Enter your choice: 1
+Enter amount to withdraw: 5000
+Current balance: 95000.0
+
+Welcome to the ATM!
+1. Withdraw
+2. Deposit
+3. Check Balance
+4. Exit
+Enter your choice: 3
+Current balance: 95000.0
+
+Welcome to the ATM!
+1. Withdraw
+2. Deposit
+3. Check Balance
+4. Exit
+Enter your choice: 2
+Enter amount to deposit: 10000
+Deposit successful!
+Current balance: 105000.0
+
+Welcome to the ATM!
+1. Withdraw
+2. Deposit
+3. Check Balance
+4. Exit
+Enter your choice: 3
+Current balance: 105000.0
+
+Welcome to the ATM!
+1. Withdraw
+2. Deposit
+3. Check Balance
+4. Exit
+Enter your choice: 4
+Thank you
